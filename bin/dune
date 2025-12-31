@@ -1,4 +1,8 @@
-(executable
- (public_name advent_of_fpga)
- (name main)
- (libraries advent_of_fpga))
+(executables
+ (modes byte exe)
+ (names generate)
+ (libraries core.command core_unix.command_unix core core_unix hardcaml
+   hardcaml_demo_project jane_rope)
+ (preprocess
+  (pps ppx_jane))
+ (promote))
