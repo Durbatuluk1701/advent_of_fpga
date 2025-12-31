@@ -26,7 +26,8 @@ end
 module O = struct
   type 'a t =
     { (* With_valid.t is an Interface type that contains a [valid] and a [value] field. *)
-      range : 'a With_valid.t [@bits num_bits]
+      max_range : 'a With_valid.t [@bits num_bits]
+    ; min_range : 'a With_valid.t [@bits num_bits]
     }
   [@@deriving hardcaml]
 end
@@ -54,7 +55,8 @@ let create scope ({ clock; clear; start; finish; data_in; data_in_valid } : _ I.
   let%hw_var max = Variable.reg spec ~width:num_bits in
   (* We don't need to name the range here since it's immediately used in the module
      output, which is automatically named when instantiating with [hierarchical] *)
-  let range = Variable.wire ~default:(zero num_bits) () in
+  let max_range = Variable.wire ~default:(zero num_bits) () in
+  let min_range = Variable.wire ~default:(zero num_bits) () in
   let range_valid = Variable.wire ~default:gnd () in
   compile
     [ sm.switch
@@ -75,14 +77,17 @@ let create scope ({ clock; clear; start; finish; data_in; data_in_valid } : _ I.
             ; when_ finish [ sm.set_next Done ]
             ] )
         ; ( Done
-          , [ range <-- max.value -: min.value
+          , [ max_range <-- max.value -: min.value
+            ; min_range <-- min.value
             ; range_valid <-- vdd
             ; when_ finish [ sm.set_next Accepting_inputs ]
             ] )
         ]
     ];
   (* [.value] is used to get the underlying Signal.t from a Variable.t in the Always DSL. *)
-  { range = { value = range.value; valid = range_valid.value } }
+  { max_range = { value = max_range.value; valid = range_valid.value }
+  ; min_range = { value = min_range.value; valid = range_valid.value }
+  }
 ;;
 
 (* The [hierarchical] wrapper is used to maintain module hierarchy in the generated

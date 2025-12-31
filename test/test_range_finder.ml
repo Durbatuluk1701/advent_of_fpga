@@ -36,11 +36,11 @@ let simple_testbench (sim : Harness.Sim.t) =
   inputs.finish := Bits.gnd;
   cycle ();
   (* Wait for result to become valid *)
-  while not (Bits.to_bool !(outputs.range.valid)) do
+  while not (Bits.to_bool !(outputs.max_range.valid)) do
     cycle ()
   done;
-  let range = Bits.to_unsigned_int !(outputs.range.value) in
-  print_s [%message "Result" (range : int)];
+  let max_range = Bits.to_unsigned_int !(outputs.max_range.value) in
+  print_s [%message "Result" (max_range : int)];
   (* Show in the waveform that [valid] stays high. *)
   cycle ~n:2 ()
 ;;
@@ -48,21 +48,24 @@ let simple_testbench (sim : Harness.Sim.t) =
 (* The [waves_config] argument to [Harness.run] determines where and how to save waveforms
    for viewing later with a waveform viewer. The commented examples below show how to save
    a waveterm file or a VCD file. *)
-let waves_config = Waves_config.no_waves
+(* let waves_config = Waves_config.no_waves *)
 
-(* let waves_config = *)
-(*   Waves_config.to_directory "/tmp/" *)
-(*   |> Waves_config.as_wavefile_format ~format:Hardcamlwaveform *)
-(* ;; *)
+let waves_config =
+  Waves_config.to_directory "/tmp/"
+  |> Waves_config.as_wavefile_format ~format:Hardcamlwaveform
+;;
 
-(* let waves_config = *)
-(*   Waves_config.to_directory "/tmp/" *)
-(*   |> Waves_config.as_wavefile_format ~format:Vcd *)
-(* ;; *)
+(* let waves_config =
+  Waves_config.to_directory "/tmp/" |> Waves_config.as_wavefile_format ~format:Vcd
+;; *)
 
 let%expect_test "Simple test, optionally saving waveforms to disk" =
   Harness.run_advanced ~waves_config ~create:Range_finder.hierarchical simple_testbench;
-  [%expect {| (Result (range 146)) |}]
+  [%expect
+    {|
+    (Result (max_range 146))
+    Saved waves to /tmp/test_range_finder_ml_Simple_test__optionally_saving_waveforms_to_disk.hardcamlwaveform
+    |}]
 ;;
 
 let%expect_test "Simple test with printing waveforms directly" =
@@ -92,7 +95,7 @@ let%expect_test "Simple test with printing waveforms directly" =
     simple_testbench;
   [%expect
     {|
-    (Result (range 146))
+    (Result (max_range 146))
     ┌Signals─────────────────────┐┌Waves───────────────────────────────────────────────────────┐
     │range_finder$i$clear        ││────┐                                                       │
     │                            ││    └───────────────────────────────────────────────────────│
@@ -113,10 +116,15 @@ let%expect_test "Simple test with printing waveforms directly" =
     │                            ││────────────┬───┬───────────────────────┬───────────────────│
     │range_finder$min            ││ 0          │65.│16                     │4                  │
     │                            ││────────────┴───┴───────────────────────┴───────────────────│
-    │range_finder$o$range$valid  ││                                                ┌───────────│
+    │range_finder$o$max_range$val││                                                ┌───────────│
     │                            ││────────────────────────────────────────────────┘           │
     │                            ││────────────────────────────────────────────────┬───────────│
-    │range_finder$o$range$value  ││ 0                                              │146        │
+    │range_finder$o$max_range$val││ 0                                              │146        │
+    │                            ││────────────────────────────────────────────────┴───────────│
+    │range_finder$o$min_range$val││                                                ┌───────────│
+    │                            ││────────────────────────────────────────────────┘           │
+    │                            ││────────────────────────────────────────────────┬───────────│
+    │range_finder$o$min_range$val││ 0                                              │4          │
     │                            ││────────────────────────────────────────────────┴───────────│
     └────────────────────────────┘└────────────────────────────────────────────────────────────┘
     |}]
