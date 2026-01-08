@@ -7,6 +7,7 @@ open! Core
 open! Hardcaml
 open! Signal
 
+let name = "range-finder"
 let num_bits = 16
 
 (* Every hardcaml module should have an I and an O record, which define the module

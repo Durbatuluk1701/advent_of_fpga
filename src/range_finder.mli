@@ -4,6 +4,7 @@
 open! Core
 open! Hardcaml
 
+val name : string
 val num_bits : int
 
 (*_ The module interface exports the same I/O records. Note that the widths don't need to
