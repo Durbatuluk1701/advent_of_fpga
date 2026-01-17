@@ -15,6 +15,7 @@ To build the project, use the following command:
 ```bash
 dune build
 ```
+(you may need to run `opam install . --deps-only` or get the necessary dependencies first).
 
 To generate the RTL for a specific solution, run:
 
@@ -38,14 +39,14 @@ dune runtest
 *Perhaps I was too ambitious with the number of days planned...*
 
 - [x] [Day 1](src/day1.ml)
-- [ ] [Day 2](src/day2.ml)
-- [ ] [Day 3](src/day3.ml)
-- [ ] [Day 4](src/day4.ml)
-- [ ] [Day 5](src/day5.ml)
-- [ ] [Day 6](src/day6.ml)
-- [ ] [Day 7](src/day7.ml)
-- [ ] [Day 8](src/day8.ml)
-- [ ] [Day 9](src/day9.ml)
-- [ ] [Day 10](src/day10.ml)
-- [ ] [Day 11](src/day11.ml)
-- [ ] [Day 12](src/day12.ml)
+- [ ] [~~Day 2~~](src/day2.ml)
+- [ ] [~~Day 3~~](src/day3.ml)
+- [ ] [~~Day 4~~](src/day4.ml)
+- [ ] [~~Day 5~~](src/day5.ml)
+- [ ] [~~Day 6~~](src/day6.ml)
+- [ ] [~~Day 7~~](src/day7.ml)
+- [ ] [~~Day 8~~](src/day8.ml)
+- [ ] [~~Day 9~~](src/day9.ml)
+- [ ] [~~Day 10~~](src/day10.ml)
+- [ ] [~~Day 11~~](src/day11.ml)
+- [ ] [~~Day 12~~](src/day12.ml)

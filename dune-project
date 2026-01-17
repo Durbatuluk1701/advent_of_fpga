@@ -10,6 +10,18 @@
   "A collection of Advent of Code solutions implemented with Hardcaml")
  (description
   "A collection of Advent of Code solutions implemented with Hardcaml")
- (depends ocaml)
+ (depends
+  ocaml
+  dune
+  core
+  hardcaml
+  hardcaml_test_harness
+  hardcaml_circuits
+  hardcaml_waveterm
+  re
+  ppx_jane
+  ppx_hardcaml
+  core_unix
+  jane_rope)
  (tags
   ("hardware" "advent of code")))
