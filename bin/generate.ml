@@ -1,6 +1,6 @@
 open! Core
 open! Hardcaml
-open! Hardcaml_demo_project
+open! Advent_of_fpga
 
 let generate_rtl (module Sln : Soln.Solution) =
   let module C = Circuit.With_interface (Sln.I) (Sln.O) in
@@ -23,7 +23,7 @@ let soln_rtl_command (module Sln : Soln.Solution) =
       fun () -> generate_rtl (module Sln)]
 ;;
 
-let solns = [ (module Range_finder : Soln.Solution) ]
+let solns = [ (module Day1 : Soln.Solution) ]
 
 let () =
   match Sys.get_argv () with

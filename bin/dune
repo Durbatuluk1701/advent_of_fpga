@@ -1,14 +1,14 @@
 (executables
  (modes byte exe)
  (names generate)
+ (public_names generate)
  (libraries
   core.command
   core_unix.command_unix
   core
   core_unix
   hardcaml
-  hardcaml_demo_project
+  advent_of_fpga
   jane_rope)
  (preprocess
-  (pps ppx_jane))
- (promote))
+  (pps ppx_jane)))

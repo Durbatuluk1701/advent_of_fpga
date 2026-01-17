@@ -3,27 +3,9 @@ open! Hardcaml
 
 module type Solution = sig
   val name : string
-  val num_bits : int
 
-  module I : sig
-    type 'a t =
-      { clock : 'a
-      ; clear : 'a
-      ; start : 'a
-      ; finish : 'a
-      ; data_in : 'a
-      ; data_in_valid : 'a
-      }
-    [@@deriving hardcaml]
-  end
-
-  module O : sig
-    type 'a t =
-      { max_range : 'a With_valid.t
-      ; min_range : 'a With_valid.t
-      }
-    [@@deriving hardcaml]
-  end
+  module I : Hardcaml.Interface.S
+  module O : Hardcaml.Interface.S
 
   val hierarchical : Scope.t -> Signal.t I.t -> Signal.t O.t
 end

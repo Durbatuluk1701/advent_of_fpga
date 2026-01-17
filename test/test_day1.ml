@@ -2,7 +2,7 @@ open! Core
 open! Hardcaml
 open! Hardcaml_waveterm
 open! Hardcaml_test_harness
-module Day1 = Hardcaml_demo_project.Day1
+module Day1 = Advent_of_fpga.Day1
 module Harness = Cyclesim_harness.Make (Day1.I) (Day1.O)
 
 let ( <--. ) = Bits.( <--. )
@@ -24,38 +24,22 @@ let parse_input_file filename =
     | _ -> failwith "Invalid direction in input file")
 ;;
 
-(* let pp_entry = function
-  | Left mag -> sprintf "L%i" mag
-  | Right mag -> sprintf "R%i" mag
-;; *)
-
-let sample_input_values =
-  [ 0, 68; 0, 30; 1, 48; 0, 5; 1, 60; 0, 55; 0, 1; 0, 99; 1, 14; 0, 82 ]
-;;
-
 let simple_testbench test_file (sim : Harness.Sim.t) =
   let inputs = Cyclesim.inputs sim in
   let outputs = Cyclesim.outputs sim in
   let cycle ?n () = Cyclesim.cycle ?n sim in
   (* Helper function for inputting one value *)
   let feed_input entry =
-    (* let prev_pos = Bits.to_unsigned_int !(outputs.position.value) in *)
-    let mag =
-      match entry with
-      | Left mag ->
-        inputs.direction := Bits.gnd;
-        mag
-      | Right mag ->
-        inputs.direction := Bits.vdd;
-        mag
-    in
-    inputs.magnitude <--. mag;
+    (inputs.magnitude
+     <--.
+     match entry with
+     | Left mag ->
+       inputs.direction := Bits.gnd;
+       mag
+     | Right mag ->
+       inputs.direction := Bits.vdd;
+       mag);
     cycle ()
-    (* printf
-      "%i \t=[ %s \t(%i) ]=>\n"
-      prev_pos
-      (pp_entry entry)
-      (Bits.to_unsigned_int !(outputs.count_pass_zero.value)) *)
   in
   (* Reset the design *)
   inputs.clear := Bits.vdd;
@@ -68,7 +52,7 @@ let simple_testbench test_file (sim : Harness.Sim.t) =
   inputs.start := Bits.gnd;
   (* Input some data *)
   inputs.data_in_valid := Bits.vdd;
-  List.iter (parse_input_file test_file) ~f:(fun x -> feed_input x);
+  List.iter (parse_input_file test_file) ~f:feed_input;
   inputs.data_in_valid := Bits.gnd;
   cycle ();
   inputs.finish := Bits.vdd;

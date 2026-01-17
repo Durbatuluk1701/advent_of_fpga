@@ -1,9 +1,9 @@
 (library
- (name hardcaml_demo_project_test)
+ (name advent_of_fpga_test)
  (libraries
   core
   hardcaml
-  hardcaml_demo_project
+  advent_of_fpga
   hardcaml_test_harness
   hardcaml_waveterm
   re)

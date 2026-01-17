@@ -3,6 +3,8 @@ open Hardcaml
 open Hardcaml_circuits
 open Signal
 
+let name = "day1"
+
 (* System Parameters *)
 let start_pos = 50
 let dial_size = 100
@@ -54,6 +56,7 @@ module States = struct
   [@@deriving sexp_of, compare ~localize, enumerate]
 end
 
+(* we use divide by constant, should be relatively efficient still *)
 module DivByCnst = Divide_by_constant.Make (Signal)
 
 let create
@@ -105,18 +108,10 @@ let create
                         (position.value <: mag_r)
                         [ if_
                             (position.value ==:. 0)
-                            (* if the position start in 0, then it is NOT an extra passing of 0 *)
                             [ count_pass_zero <-- count_pass_zero.value +: num_twists ]
                             [ count_pass_zero
                               <-- count_pass_zero.value +: num_twists +: one count_bits
                             ]
-                          (* (count_pass_zero
-                           <-- count_pass_zero.value
-                               +: num_twists
-                               +:
-                               if position.value ==:. 0
-                               then one count_bits
-                               else zero count_bits) *)
                         ; position <-- pos_dial_size -: mag_r +: position.value
                         ; when_
                             (pos_dial_size -: mag_r +: position.value ==:. 0)
