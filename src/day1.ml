@@ -3,6 +3,27 @@ open Hardcaml
 open Hardcaml_circuits
 open Signal
 
+(** Day 1:
+
+    The general approach is as follows:
+    - Initialize to [start_pos]
+    - For each input:
+      - If turning left:
+        - If the [magnitude] will cause us to wrap around the dial, we first calculate how
+          many full rotations the magnitude alone would make (by [Divide_by_constant] for
+          the [dial_size]), then we rectify for an additional possible rotation if the
+          [remainder + cur_pos] would cause a full rotation as well.
+      - If turning right - things are simpler:
+        - The [magnitude + cur_pos] can tell us how many full rotations we make, so we and
+          the remainder too
+      - In either case: The [count_pass_zero] is incremented by the number of full
+        rotations calculated. The [count_on_zero] is incremented by one if we land on
+        zero.
+      - [remainder] is calculated in a sort of funky way by taking the
+        [magnitude - (magnitude//dial_size * dial_size)]
+    - When all inputs have been processed, we output the final position, the count of
+      times we landed on zero, and the count of times we passed over zero. *)
+
 let name = "day1"
 
 (* System Parameters *)
